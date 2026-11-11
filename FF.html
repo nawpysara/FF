@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pemetaan Sekolah</title>
+    
+    <!-- leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!--font-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        
+        body { background-color: #FFFEF2; color: #1e293b; overflow: hidden; }
+
+        #landing-page {
+            position: absolute; width: 100%; height: 100vh;
+            background: linear-gradient(135deg, #F5F2EB 0%, #FFFEF2 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; z-index: 1000; transition: opacity 0.6s ease;
+            padding: 20px;
+        }
+
+        #landing-page h1 { font-family: 'Tangerine', serif; font-size: 5rem; color: #5A8C48; }
+        #landing-page p { font-size: 1.1rem; color: #475569; margin-bottom: 30px; max-width: 600px; }
+        #landing-page p2 { font-size: 0.5rem; color: #475569; margin-bottom: 10px; max-width: 600px; }
+        
+        .btn-mulai {
+            background-color: #88c771; color: white; border: none;
+            padding: 14px 36px; font-size: 1.1rem; font-weight: 600;
+            border-radius: 30px; cursor: pointer; box-shadow: 0 4px 12px rgba(75, 150, 48, 0.3);
+            transition: 0.2s;
+        }
+        .btn-mulai:hover { background-color: #B9E8A7; transform: translateY(-2px); }
+       
+        #app-container { display: flex; width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+        
+        #sidebar {
+            width: 320px;
+            min-width: 320px;
+            background-color: #FFFEF2;
+            padding: 15px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        #sidebar.collapsed {
+            transform: translateX(-100%); margin-right: -320px; 
+        }
+
+        .btn-toggle-sidebar {
+            position: absolute; right: -35px; top: 90px; width: 35px; height: 40px; 
+            background: #AD9B79; color: #FFFEF2; border: none; border-radius: 0 8px 8px 0; 
+            cursor: pointer; font-size: 1.5rem; font-weight: bold; box-shadow: 3px 0 5px rgba(0,0,0,0.15); z-index: 600;
+        }        
+
+        .sidebar-header h2 {
+            font-family: 'Tangerine', serif; font-size: 3rem; color: #5A8C48;
+        }
+                
+        .sidebar-header p {
+            font-family: "Newsreader", serif; font-size: 0.8rem; color: #AD9B79; margin-bottom: 5px;
+        }
+        
+        #map { flex-grow: 1; height: 100%; }                
+        .filter-box { display: flex; gap: 8px; margin-bottom: 15px; }
+        .filter-btn {
+            flex: 1; padding: 8px; border: 1px solid #cbd5e1; background: #f8fafc;
+            border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+        }
+        .filter-btn.active { background: #CFC4B2; color: #FFFEF2; border-color: #AD9B79; }
+
+        .school-list { overflow-y: auto; flex-grow: 1; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+        .school-item {
+            padding: 10px; margin-bottom: 8px; background: #FFFEFC; border-radius: 6px;
+            cursor: pointer; border-left: 4px solid #CFC4B2; transition: 0.2s;
+        }
+        .school-item:hover { background: #FFFEFC; }
+        .school-item h4 { font-size: 0.9rem; color: #4B6E5A; }
+        .school-item span { font-size: 0.75rem; color: #79997C; }
+    </style>
+</head>
+<body>
+
+<!--landing page-->
+    <div id="landing-page">
+        <h1>Future Finder</h1>
+        <p>Sistem Pemetaan Sekolah Lanjutan (SMA, SMK, MA) untuk Membantu Calon Siswa Menentukan Pilihan Terbaik.</p>
+        <p2>Inovasi Siswa SMP Negeri 01 Kota Batu</p2>
+        <button class="btn-mulai" onclick="mulaiAplikasi()">Mulai Eksplorasi</button>
+    </div>
+
+<!-- hlman utama -->
+    <div id="app-container" style="display:none;">
+        <div id="sidebar">
+            <button class="btn-toggle-sidebar" id="toggle-btn" onclick="toggleSidebar()">◀</button>
+       
+            <div class="sidebar-header">
+                <h2>Daftar Sekolah</h2>
+                <p>Klik salah satu sekolah untuk melihat lokasi di peta.</p>
+            </div>
+            
+            <div class="filter-box">
+                <button class="filter-btn active" onclick="filterJenjang('Semua', this)">Semua</button>
+                <button class="filter-btn" onclick="filterJenjang('SMA', this)">SMA</button>
+                <button class="filter-btn" onclick="filterJenjang('SMK', this)">SMK</button>
+                <button class="filter-btn" onclick="filterJenjang('MA', this)">MA</button>
+            </div>
+
+            <div class="school-list" id="daftar-sekolah-container">
+<!-- data skolah -->
+            </div>
+        </div>
+        
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // data skolah
+        const dataSekolah = [
+            { nama: "SMAN 1 Kota Batu", jenjang: "SMA", lat: -7.8712, lng: 112.5273, akreditasi: "A", web: "https://sman1batu.sch.id" },
+            { nama: "SMKN 1 Kota Batu", jenjang: "SMK", lat: -7.8821, lng: 112.5312, akreditasi: "A", web: "https://smkn1batu.sch.id" },
+            { nama: "MAN Kota Batu", jenjang: "MA", lat: -7.8654, lng: 112.5401, akreditasi: "A", web: "https://mankotabatu.sch.id" },
+            { nama: "SMAN 2 Kota Batu", jenjang: "SMA", lat: -7.8900, lng: 112.5200, akreditasi: "B", web: "https://sman2batu.sch.id" }
+        ];
+
+        let map, markers = [];
+
+        function mulaiAplikasi() {
+            document.getElementById('landing-page').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('landing-page').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                initMap();
+                tampilkanDaftar(dataSekolah);
+            }, 500);
+        }
+        
+        function initMap() {
+            map = L.map('map').setView([-7.875, 112.528], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            muatMarker(dataSekolah);
+        }
+
+        function muatMarker(data) {        
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+            data.forEach(s => {               
+                let warnaPin = s.jenjang === 'SMA' ? '#1e3a8a' : (s.jenjang === 'SMK' ? '#15803d' : '#d97706');
+                
+                let customIcon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: ${warnaPin}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>`,
+                    iconSize: [14, 14]
+                });
+                
+                let marker = L.marker([s.lat, s.lng], { icon: customIcon }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div style="font-family: 'Poppins', sans-serif;">
+                        <h4 style="color: #1e3a8a; margin-bottom: 4px;">${s.nama}</h4>
+                        <p style="font-size: 12px; margin-bottom: 2px;"><b>Jenjang:</b> ${s.jenjang} | <b>Akreditasi:</b> ${s.akreditasi}</p>
+                        <div style="margin-top: 8px;">
+                            <a href="https://maps.google.com/?q=${s.lat},${s.lng}" target="_blank" style="font-size: 12px; color: #15803d; text-decoration: none; font-weight: 600;">Buka Google Maps</a> &bull; 
+                            <a href="${s.web}" target="_blank" style="font-size: 12px; color: #1e3a8a; text-decoration: none; font-weight: 600;">Website Sekolah</a>
+                        </div>
+                    </div>
+                `);
+
+                markers.push(marker);
+            });
+        }
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const btn = document.getElementById('toggle-btn');
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                btn.innerHTML = '▶'; 
+            } else {
+                btn.innerHTML = '◀'; 
+            }
+
+            setTimeout(() => {
+                if (map) map.invalidateSize();
+            }, 300);
+        }
+
+        function tampilkanDaftar(data) {
+            const container = document.getElementById('daftar-sekolah-container');
+            container.innerHTML = '';
+
+            data.forEach(s => {
+                let div = document.createElement('div');
+                div.className = 'school-item';
+                div.innerHTML = `
+                    <h4>${s.nama}</h4>
+                    <span>Jenjang: ${s.jenjang} | Akreditasi: ${s.akreditasi}</span>
+                `;
+
+                div.onclick = () => {
+                    map.setView([s.lat, s.lng], 15);
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function filterJenjang(jenjang, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if(jenjang === 'Semua') {
+                muatMarker(dataSekolah);
+                tampilkanDaftar(dataSekolah);
+            } else {
+                let hasilFilter = dataSekolah.filter(s => s.jenjang === jenjang);
+                muatMarker(hasilFilter);
+                tampilkanDaftar(hasilFilter);
+            }
+        }
+    </script>
+</body>
+</html>
