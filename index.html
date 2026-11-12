@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif''; }
@@ -171,12 +171,18 @@
     <script>
         // data skolah
         const dataSekolah = [
+<!--sma-->
             { nama: "SMAN 1 Kota Batu", jenjang: "SMA", alamat: "Jl. KH. Agus Salim No. 57, Sisir, Kec. Batu, Kota Batu, Jawa Timur 65314", lat: -7.8712, lng: 112.5273, akreditasi: "A", web: "https://sman1batu.sch.id", email: "sman1batu@yahoo.com", deskripsi: "Berpusat pada prestasi akademik sains dan riset, inovasi pembelajaran berbasis teknologi (IT), serta pembentukan karakter yang berbudaya lingkungan. Mengusung motto Studium et Virtus dengan visi mewujudkan sekolah unggul berlandaskan iman, takwa, dan kepedulian lingkungan."},
-            { nama: "SMKN 1 Kota Batu", jenjang: "SMK", alamat:"Jl. Bromo No.11, Sisir, Kec. Batu, Kota Batu, Jawa Timur 65314", lat: -7.8821, lng: 112.5312, akreditasi: "A", web: "https://smkn1batu.sch.id", email: "smkn1batu@yahoo.co.id", deskripsi: "Mempunyai 4 jurusan yaitu, Kuliner, Desain dan Produk Busana, Perhotelan dan Tata kecantikan. Pada tahun 2023, SMK Negeri 1 Batu ditetapkan sebagai SMK Pusat Keunggulan oleh Kementerian Pendidikan melalui Direktorat Jenderal Vokasi. Hingga menjadikannya salah satu sekolah kejuruan favorit. "},
-            { nama: "MAN Kota Batu", jenjang: "MA", alamat: "Jl. Patimura No.25, Temas, Kec. Batu, Kota Batu, Jawa Timur 65315", lat: -7.8654, lng: 112.5401, akreditasi: "A", web: "https://mankotabatu.sch.id", email: "man_kotabatu@yahoo.com", deskripsi: "Dikenal sebagai pelopor madrasah digital yang unggul dalam memadukan prestasi akademik, teknologi, dan pembinaan karakter Islami. Madrasah ini menyediakan beragam kelas unggulan seperti Kelas Riset, Olimpiade, dan Tahfidz yang telah mencetak banyak juara tingkat nasional serta meluluskan siswa ke perguruan tinggi ternama."},
             { nama: "SMAN 2 Kota Batu", jenjang: "SMA", lat: -7.8900, lng: 112.5200, akreditasi: "B", web: "https://sman2batu.sch.id" },
-            { nama: "SMAN 3 Kota Batu", jenjang: "SMA", lat: -7.8344894, lng: 112.5300381, akreditasi: "A"},
-        ];
+            { nama: "SMAN 3 Kota Batu", jenjang: "SMA", lat: "-7.8344894", lng: "112.5300381", akreditasi: "A"},
+            { nama: "SMA Al Hikmah IIBS", jenjang: "SMA", alamat: "4HR5+RR4, Dsn. Sabrangbendo, Jl. Arjuno, Giripurno, Kec. Bumiaji, Kota Batu, Jawa Timur 65333", lat:"-7.853942", lng: "112.559964", akreditasi: "i", web: "https://boarding.alhikmahsby.sch.id/", email: "i", deskripsi: "i"},
+            
+<!--smk-->        
+            { nama: "SMKN 1 Kota Batu", jenjang: "SMK", alamat:"Jl. Bromo No.11, Sisir, Kec. Batu, Kota Batu, Jawa Timur 65314", lat: -7.8821, lng: 112.5312, akreditasi: "A", web: "https://smkn1batu.sch.id", email: "smkn1batu@yahoo.co.id", deskripsi: "Mempunyai 4 jurusan yaitu, Kuliner, Desain dan Produk Busana, Perhotelan dan Tata kecantikan. Pada tahun 2023, SMK Negeri 1 Batu ditetapkan sebagai SMK Pusat Keunggulan oleh Kementerian Pendidikan melalui Direktorat Jenderal Vokasi. Hingga menjadikannya salah satu sekolah kejuruan favorit. "},
+            
+<!--ma-->            
+            { nama: "MAN Kota Batu", jenjang: "MA", alamat: "Jl. Patimura No.25, Temas, Kec. Batu, Kota Batu, Jawa Timur 65315", lat: -7.8654, lng: 112.5401, akreditasi: "A", web: "https://mankotabatu.sch.id", email: "man_kotabatu@yahoo.com", deskripsi: "Dikenal sebagai pelopor madrasah digital yang unggul dalam memadukan prestasi akademik, teknologi, dan pembinaan karakter Islami. Madrasah ini menyediakan beragam kelas unggulan seperti Kelas Riset, Olimpiade, dan Tahfidz yang telah mencetak banyak juara tingkat nasional serta meluluskan siswa ke perguruan tinggi ternama."},            
+        ];        
 
         let map, markers = [];
 let indexSoal = 0;
@@ -352,7 +358,8 @@ let indexSoal = 0;
             });
         }
 
-        function filterJenjang(jenjang, btn) {document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        function filterJenjang(jenjang, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             if(jenjang === 'Semua') {
