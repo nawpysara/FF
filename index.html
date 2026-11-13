@@ -26,17 +26,34 @@
             padding: 20px;
         }
 
-        #landing-page h1 { font-family: 'Tangerine', serif; font-size: 5rem; color: #5A8C48; shadow-blur: #f5fcf2}
-        #landing-page p { font-size: 1rem; color: #475569; margin-bottom: 30px; max-width: 600px; }
-        #landing-page p2 { font-size: 0.5rem; color: #475569; margin-bottom: 10px; max-width: 600px; }
+        #landing-page h1 { 
+            font-family: 'Tangerine', serif; 
+            font-size: 5rem; color: #5A8C48; 
+            text-shadow: 0 0 18px rgba(185, 232, 167, 0.9), 0 0 35px rgba(136, 199, 113, 0.6);
+            margin-bottom: 5px; 
+        }
+        #landing-page p { 
+            font-size: 0.85rem; 
+            line-height: 1.5;
+            color: #475569; 
+            margin-bottom: 20px; 
+            max-width: 340px; 
+        }
+        #landing-page p2 { 
+            font-size: 0.5rem; 
+            color: #475569; 
+            margin-bottom: 10px; 
+            max-width: 600px; 
+        }
         
         .btn-mulai {
             background-color: #88c771; color: white; border: none;
             padding: 14px 36px; font-size: 1.1rem; font-weight: 600;
             border-radius: 30px; cursor: pointer; box-shadow: 0 4px 12px rgba(75, 150, 48, 0.3);
             transition: 0.2s;
+            width: 280px; text-align: center;
         }
-        .btn-mulai:hover { background-color: #B9E8A7; transform: translateY(-2px); }
+        .btn-mulai:hover { background-color: #B9E8A7; transform: translateY(-2px);}
        
         #app-container { display: flex; width: 100vw; height: 100vh; position: relative; overflow: hidden; }
         
@@ -114,6 +131,7 @@
             padding: 12px 30px; font-size: 1rem; font-weight: 600;
             border-radius: 30px; cursor: pointer; box-shadow: 0 4px 12px rgba(173, 155, 121, 0.3);
             transition: 0.2s; margin-top: 10px;
+            width: 280px; text-align: center;
         }
         .btn-secondary:hover { background-color: #9c8a6b; transform: translateY(-2px); }
     </style>
