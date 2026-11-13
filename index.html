@@ -405,11 +405,10 @@
             });
         }
                 
-        let filterAktifJenjang = 'Semua';
+                let filterAktifJenjang = 'Semua';
         let filterAktifStatus = 'Semua';
-       
+
         function filterJenjang(jenjang, btn) {
-            
             const parentBox = btn.parentElement;
             parentBox.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -419,7 +418,6 @@
         }
 
         function filterStatus(status, btn) {
-            
             if (btn.classList.contains('active')) {
                 btn.classList.remove('active');
                 filterAktifStatus = 'Semua';
@@ -433,7 +431,6 @@
             terapkanFilterGabungan();
         }
 
-        // Logika utama untuk menggabungkan filter Jenjang dan Status
         function terapkanFilterGabungan() {
             let hasilFilter = dataSekolah.filter(s => {
                 let cocokJenjang = (filterAktifJenjang === 'Semua' || s.jenjang === filterAktifJenjang);
@@ -445,8 +442,6 @@
             tampilkanDaftar(hasilFilter);
         }
 
-        
-        
     </script>
 </body>
 </html>
