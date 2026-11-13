@@ -417,7 +417,9 @@
                 muatMarker(hasilFilter);
                 tampilkanDaftar(hasilFilter);
             }
-        
+                    
+       }
+
         function filterStatus(status, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -425,9 +427,9 @@
             let hasilFilter = dataSekolah.filter(s => s.status === status);
             muatMarker(hasilFilter);
             tampilkanDaftar(hasilFilter);
-        }
-            
-        }
+            }
+        
+        
     </script>
 </body>
 </html>
