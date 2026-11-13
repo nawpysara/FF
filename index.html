@@ -404,30 +404,47 @@
                 container.appendChild(div);
             });
         }
-
+                
+        let filterAktifJenjang = 'Semua';
+        let filterAktifStatus = 'Semua';
+       
         function filterJenjang(jenjang, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            
+            const parentBox = btn.parentElement;
+            parentBox.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            if(jenjang === 'Semua') {
-                muatMarker(dataSekolah);
-                tampilkanDaftar(dataSekolah);
-            } else {
-                let hasilFilter = dataSekolah.filter(s => s.jenjang === jenjang);
-                muatMarker(hasilFilter);
-                tampilkanDaftar(hasilFilter);
-            }
-                    
-       }
+            filterAktifJenjang = jenjang;
+            terapkanFilterGabungan();
+        }
 
         function filterStatus(status, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                filterAktifStatus = 'Semua';
+            } else {
+                const parentBox = btn.parentElement;
+                parentBox.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterAktifStatus = status;
+            }
 
-            let hasilFilter = dataSekolah.filter(s => s.status === status);
+            terapkanFilterGabungan();
+        }
+
+        // Logika utama untuk menggabungkan filter Jenjang dan Status
+        function terapkanFilterGabungan() {
+            let hasilFilter = dataSekolah.filter(s => {
+                let cocokJenjang = (filterAktifJenjang === 'Semua' || s.jenjang === filterAktifJenjang);
+                let cocokStatus = (filterAktifStatus === 'Semua' || s.status === filterAktifStatus);
+                return cocokJenjang && cocokStatus;
+            });
+
             muatMarker(hasilFilter);
             tampilkanDaftar(hasilFilter);
-            }
+        }
+
         
         
     </script>
